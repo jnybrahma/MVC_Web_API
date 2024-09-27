@@ -1,0 +1,879 @@
+%------------------------------ .NET Core MVC[.NET 8] Web API  - Complete Guide  Part 1 -----------------------%
+
+https://dotnetmastery.com/#course
+
+https://www.dotnetmastery.com/Home/Details?courseId=7
+
+
+%--------------------------------------------- Section 1: Introduction ------------------------------------------%
+
+- .NET Core MVC (CRUD)
+-  EF Core Basic (CRUD)
+
+- API Fundamentals
+- DTO's in API
+- EF Core in API
+- Dependency Injection
+- Repository Pattern
+- Authentication and Authorization (basic & Identity)
+- API versioning, Filtering, Sorting, caching etc.
+- Consuming API with authentication endpoints
+- Deploying API
+- Identity Server
+
+
+## What is API (Application Programming Interface)
+
+# Request Objects (HTTP Verbs / Actions)
+- GET:    Fetches /Requests Resource
+- POST:   Creates/Inserts Resource
+- PUT: 	  Updates/Modifies Resource
+- PATCH:  Updates/Modifies Partial Resource
+- DELETE: Deletes/Removes Resource
+
+# Request Objects : Metadata
+- Content type:
+- Content Length
+- Authorization:
+- Accept:
+
+# Request Content
+- HTML, CSS, XML,JSON
+- Blobs etc.
+- Information for the request.
+
+
+# Response Object:
+- Status Codes for Operation Result
+# 100-199 Informational
+- 200-299: Success
+- 200 - OK
+- 201 - Created
+- 204 - No Content
+
+# 300-399 : Redirection
+
+# 400-499: Client Errors
+- 400 - Bad Request
+- 404 - Not Found
+- 409 - Conflict
+
+# 500-599: Server Errors
+- 500 - Internal Server Error
+
+# Response Metadata:
+
+# Content
+- HTML, XML, JSON
+
+
+%--------------------------------------------- Section 2: First End Point ------------------------------------------%
+
+
+
+
+https://localhost:7096/api/villaApi
+
+
+https://placehold.co/
+
+%--------------------------------------------- Section 3: CRUD Functionality-----------------------------------------%
+
+## Add Nuget Patch package
+
+>> Microsoft.AspNetCore.JsonPatch
+
+>> Microsoft.AspNetCore.Mvc.NewtonsoftJso
+
+## reference : https://jsonpatch.com/
+id = 2
+
+[
+  {
+    
+    "path": "/name",
+    "op": "replace",
+    "value": "update villa 2"
+  }
+]
+
+GET:  https://localhost:7096/api/villaApi
+
+
+PUT: https://localhost:7096/api/villaApi/4
+
+{
+    "id": 4,  
+    "name": "Shiva Loka Kailash",
+    "occupancy": 7,
+    "sqft": 777
+}
+
+## Content Negotiations;
+
+## Install NuGet packages
+
+ 
+>> Serilog.AspNetCore
+>> Serilog.Sinks.File
+
+>> Microsoft.EntityFrameworkCore.SqlServer
+>> Microsoft.EntityFrameworkCore.Tools
+>> AutoMapper
+>> AutoMapper.Extensions.Microsoft.DependencyInjection
+
+
+## Database Connection String
+
+"ConnectionStrings": {
+
+"DefaultConnection": "Data Source=(local);Initial Catalog=DevaLokLagoon; Integrated Security=True;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False"
+
+}
+ 
+PM> Add-Migration AddVillaTable
+Build started...
+Build succeeded.
+To undo this action, use Remove-Migration.
+
+
+(base) PM> Update-Database
+Build started...
+Build succeeded.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (541ms) [Parameters=[], CommandType='Text', CommandTimeout='60']
+      CREATE DATABASE [DevaLokVilla];
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (229ms) [Parameters=[], CommandType='Text', CommandTimeout='60']
+      IF SERVERPROPERTY('EngineEdition') <> 5
+      BEGIN
+          ALTER DATABASE [DevaLokVilla] SET READ_COMMITTED_SNAPSHOT ON;
+      END;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (13ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (13ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [__EFMigrationsHistory] (
+          [MigrationId] nvarchar(150) NOT NULL,
+          [ProductVersion] nvarchar(32) NOT NULL,
+          CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [MigrationId], [ProductVersion]
+      FROM [__EFMigrationsHistory]
+      ORDER BY [MigrationId];
+Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20240728083507_AddVillaTable'.
+Applying migration '20240728083507_AddVillaTable'.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [Villas] (
+          [Id] int NOT NULL IDENTITY,
+          [Name] nvarchar(max) NOT NULL,
+          [Details] nvarchar(max) NOT NULL,
+          [Rate] float NOT NULL,
+          [Sqft] int NOT NULL,
+          [Occupancy] int NOT NULL,
+          [ImageUrl] nvarchar(max) NOT NULL,
+          [Amenity] nvarchar(max) NOT NULL,
+          [CreatedDate] datetime2 NOT NULL,
+          [UpdatedDate] datetime2 NOT NULL,
+          CONSTRAINT [PK_Villas] PRIMARY KEY ([Id])
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (12ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+      VALUES (N'20240728083507_AddVillaTable', N'8.0.7');
+Done.
+
+
+https://placehold.co/
+
+(base) PM> Add-Migration SeedVillaTable
+Build started...
+Build succeeded.
+To undo this action, use Remove-Migration.
+
+To undo this action, use Remove-Migration.
+(base) PM> Add-Migration SeedVillaTableAddCreateDate
+Build started...
+Build succeeded.
+An operation was scaffolded that may result in the loss of data. Please review the migration for accuracy.
+To undo this action, use Remove-Migration.
+
+(base) PM> Update-Database
+Build started...
+Build succeeded.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (20ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (20ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [MigrationId], [ProductVersion]
+      FROM [__EFMigrationsHistory]
+      ORDER BY [MigrationId];
+Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20240729081830_SeedVillaTable'.
+Applying migration '20240729081830_SeedVillaTable'.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (52ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Amenity', N'CreatedDate', N'Details', N'ImageUrl', N'Name', N'Occupancy', N'Rate', N'Sqft', N'UpdatedDate') AND [object_id] = OBJECT_ID(N'[Villas]'))
+          SET IDENTITY_INSERT [Villas] ON;
+      INSERT INTO [Villas] ([Id], [Amenity], [CreatedDate], [Details], [ImageUrl], [Name], [Occupancy], [Rate], [Sqft], [UpdatedDate])
+      VALUES (1, N'', '0001-01-01T00:00:00.0000000', N'Royal villa with private spa', N'https://placehold.co/', N'Royal Villa', 1, 111.0E0, 1111, '0001-01-01T00:00:00.0000000'),
+      (2, N'', '0001-01-01T00:00:00.0000000', N'Premium villa with private pool', N'https://placehold.co/', N'Premium Villa', 2, 222.0E0, 2222, '0001-01-01T00:00:00.0000000'),
+      (3, N'', '0001-01-01T00:00:00.0000000', N'Luxury villa with private and Spa pool', N'https://placehold.co/', N'Luxury Villa', 3, 333.0E0, 33333, '0001-01-01T00:00:00.0000000'),
+      (4, N'', '0001-01-01T00:00:00.0000000', N'Presidential villa with private and spa pool', N'https://placehold.co/', N'Presidential Villa', 4, 444.0E0, 4444, '0001-01-01T00:00:00.0000000');
+      IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Amenity', N'CreatedDate', N'Details', N'ImageUrl', N'Name', N'Occupancy', N'Rate', N'Sqft', N'UpdatedDate') AND [object_id] = OBJECT_ID(N'[Villas]'))
+          SET IDENTITY_INSERT [Villas] OFF;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+      VALUES (N'20240729081830_SeedVillaTable', N'8.0.7');
+Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20240729082156_SeedVillaTableAddCreateDate'.
+Applying migration '20240729082156_SeedVillaTableAddCreateDate'.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (13ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-07-29T18:21:55.7995943+10:00'
+      WHERE [Id] = 1;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-07-29T18:21:55.7995965+10:00'
+      WHERE [Id] = 2;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-07-29T18:21:55.7995967+10:00'
+      WHERE [Id] = 3;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-07-29T18:21:55.7995969+10:00'
+      WHERE [Id] = 4;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+      VALUES (N'20240729082156_SeedVillaTableAddCreateDate', N'8.0.7');
+Done.
+
+
+
+%--------------------------------------------- Section 4: Dependency Injection and DBContext------------------------------------------%
+https://placehold.co/
+
+
+
+
+
+
+%--------------------------------------------- Section 5: DTO and AutoMapper ------------------------------------------%
+
+
+
+
+## Install NuGet packages
+
+ 
+>> Serilog.AspNetCore
+>> Serilog.Sinks.File
+
+>> Microsoft.EntityFrameworkCore.SqlServer
+>> Microsoft.EntityFrameworkCore.Tools
+>> AutoMapper
+>> AutoMapper.Extensions.Microsoft.DependencyInjection
+
+
+
+
+%--------------------------------------------- Section 6: Repository ------------------------------------------%
+
+
+(base) PM> Add-Migration
+cmdlet Add-Migration at command pipeline position 1
+Supply values for the following parameters:
+Name: CreateVillaNumberTable
+Build started...
+Build succeeded.
+An operation was scaffolded that may result in the loss of data. Please review the migration for accuracy.
+To undo this action, use Remove-Migration.
+(base) PM> Update-Database
+Build started...
+Build succeeded.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (64ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (58ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (64ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [MigrationId], [ProductVersion]
+      FROM [__EFMigrationsHistory]
+      ORDER BY [MigrationId];
+Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20240805081810_CreateVillaNumberTable'.
+Applying migration '20240805081810_CreateVillaNumberTable'.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (24ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [VillaNumbers] (
+          [VillaNo] int NOT NULL,
+          [SpecialDetails] nvarchar(max) NOT NULL,
+          [CreatedDate] datetime2 NOT NULL,
+          [UpdatedDate] datetime2 NOT NULL,
+          CONSTRAINT [PK_VillaNumbers] PRIMARY KEY ([VillaNo])
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (54ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-05T18:18:07.1156119+10:00'
+      WHERE [Id] = 1;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (11ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-05T18:18:07.1156147+10:00'
+      WHERE [Id] = 2;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (13ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-05T18:18:07.1156151+10:00'
+      WHERE [Id] = 3;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (28ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-05T18:18:07.1156155+10:00'
+      WHERE [Id] = 4;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (29ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+      VALUES (N'20240805081810_CreateVillaNumberTable', N'8.0.7');
+Done.
+(base) PM> 
+
+(base) PM> Add-Migration AddForeignKeyToVillaTable
+Build started...
+Build succeeded.
+An operation was scaffolded that may result in the loss of data. Please review the migration for accuracy.
+To undo this action, use Remove-Migration.
+(base) PM> 
+
+(base) PM> Update-Database
+Build started...
+Build succeeded.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (44ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (328ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (20,752ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (24ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [MigrationId], [ProductVersion]
+      FROM [__EFMigrationsHistory]
+      ORDER BY [MigrationId];
+Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20240810074941_AddForeignKeyToVillaTable'.
+Applying migration '20240810074941_AddForeignKeyToVillaTable'.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      ALTER TABLE [VillaNumbers] ADD [VillaID] int NOT NULL DEFAULT 0;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (24ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-10T17:49:39.2309284+10:00'
+      WHERE [Id] = 1;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-10T17:49:39.2309306+10:00'
+      WHERE [Id] = 2;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-10T17:49:39.2309309+10:00'
+      WHERE [Id] = 3;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-10T17:49:39.2309311+10:00'
+      WHERE [Id] = 4;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (10ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX [IX_VillaNumbers_VillaID] ON [VillaNumbers] ([VillaID]);
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      ALTER TABLE [VillaNumbers] ADD CONSTRAINT [FK_VillaNumbers_Villas_VillaID] FOREIGN KEY ([VillaID]) REFERENCES [Villas] ([Id]) ON DELETE CASCADE;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+      VALUES (N'20240810074941_AddForeignKeyToVillaTable', N'8.0.7');
+Done.
+
+
+%--------------------------------------------- Section 7: Consuming API------------------------------------------%
+
+## create new project in MVC core for consuming API under same solution (DevaLokaVilla) - ASP.NET Core Web App (Model-View-Controller)
+
+- New project (DevaLokaVilla_WebApp) - Set it as a startup project. (right click on (DevaLokaVilla_WebApp) - set as Startup Project) 
+
+## run the project
+https://localhost:7038/
+
+https://localhost:7096/swagger/index.html
+
+## Now go to Solution(DevalLokaVilla) --> right click  --> configure Startup project --> select project API as first to start then web App
+
+
+## create new class library under DevaLokaVilla Solution --> DevaLokaVilla_Utility
+
+
+
+## Install NuGet packages
+
+
+>> AutoMapper
+>> AutoMapper.Extensions.Microsoft.DependencyInjection
+>> NewtonSoftJson
+
+
+(base) PM> add-migration ChangeNullableToFalse
+Build started...
+Build succeeded.
+An operation was scaffolded that may result in the loss of data. Please review the migration for accuracy.
+To undo this action, use Remove-Migration.
+
+(base) PM> update-database
+Build started...
+Build succeeded.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (42ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (36ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (45ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [MigrationId], [ProductVersion]
+      FROM [__EFMigrationsHistory]
+      ORDER BY [MigrationId];
+Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20240815072332_ChangeNullableToFalse'.
+Applying migration '20240815072332_ChangeNullableToFalse'.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (161ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      DECLARE @var0 sysname;
+      SELECT @var0 = [d].[name]
+      FROM [sys].[default_constraints] [d]
+      INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+      WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Villas]') AND [c].[name] = N'ImageUrl');
+      IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [Villas] DROP CONSTRAINT [' + @var0 + '];');
+      ALTER TABLE [Villas] ALTER COLUMN [ImageUrl] nvarchar(max) NULL;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (48ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      DECLARE @var1 sysname;
+      SELECT @var1 = [d].[name]
+      FROM [sys].[default_constraints] [d]
+      INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+      WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Villas]') AND [c].[name] = N'Details');
+      IF @var1 IS NOT NULL EXEC(N'ALTER TABLE [Villas] DROP CONSTRAINT [' + @var1 + '];');
+      ALTER TABLE [Villas] ALTER COLUMN [Details] nvarchar(max) NULL;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (49ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      DECLARE @var2 sysname;
+      SELECT @var2 = [d].[name]
+      FROM [sys].[default_constraints] [d]
+      INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+      WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Villas]') AND [c].[name] = N'Amenity');
+      IF @var2 IS NOT NULL EXEC(N'ALTER TABLE [Villas] DROP CONSTRAINT [' + @var2 + '];');
+      ALTER TABLE [Villas] ALTER COLUMN [Amenity] nvarchar(max) NULL;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (51ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      DECLARE @var3 sysname;
+      SELECT @var3 = [d].[name]
+      FROM [sys].[default_constraints] [d]
+      INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+      WHERE ([d].[parent_object_id] = OBJECT_ID(N'[VillaNumbers]') AND [c].[name] = N'SpecialDetails');
+      IF @var3 IS NOT NULL EXEC(N'ALTER TABLE [VillaNumbers] DROP CONSTRAINT [' + @var3 + '];');
+      ALTER TABLE [VillaNumbers] ALTER COLUMN [SpecialDetails] nvarchar(max) NULL;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-15T17:23:28.4107508+10:00'
+      WHERE [Id] = 1;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-15T17:23:28.4107540+10:00'
+      WHERE [Id] = 2;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-15T17:23:28.4107546+10:00'
+      WHERE [Id] = 3;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-08-15T17:23:28.4107551+10:00'
+      WHERE [Id] = 4;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+      VALUES (N'20240815072332_ChangeNullableToFalse', N'8.0.7');
+Done.
+
+---------------------
+## Bootswatch Theme:
+
+
+https://bootswatch.com/
+
+https://bootswatch.com/cyborg/
+
+
+## download : - bootstrap.css
+
+## Sweetalert2 : notifications
+
+https://sweetalert2.github.io/
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+Try me!
+Swal.fire({
+  position: "top-end",
+  icon: "success",
+  title: "Your work has been saved",
+  showConfirmButton: false,
+  timer: 1500
+});
+
+
+%--------------------------------------------- Section 8: API Security ------------------------------------------%
+
+
+
+(base) PM> add-migration addUsersToDb
+Multiple startup projects set.
+Using project 'DevaLokaVillaAPI' as the startup project.
+Build started...
+Build succeeded.
+An operation was scaffolded that may result in the loss of data. Please review the migration for accuracy.
+To undo this action, use Remove-Migration.
+
+(base) PM> update-database
+Multiple startup projects set.
+Using project 'DevaLokaVillaAPI' as the startup project.
+Build started...
+Build succeeded.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (22ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (21ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (14ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [MigrationId], [ProductVersion]
+      FROM [__EFMigrationsHistory]
+      ORDER BY [MigrationId];
+Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20240901084344_addUsersToDb'.
+Applying migration '20240901084344_addUsersToDb'.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [LocalUsers] (
+          [Id] int NOT NULL IDENTITY,
+          [UserName] nvarchar(max) NULL,
+          [Name] nvarchar(max) NULL,
+          [Password] nvarchar(max) NULL,
+          [Role] nvarchar(max) NULL,
+          CONSTRAINT [PK_LocalUsers] PRIMARY KEY ([Id])
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-09-01T18:43:41.0578945+10:00'
+      WHERE [Id] = 1;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-09-01T18:43:41.0578973+10:00'
+      WHERE [Id] = 2;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-09-01T18:43:41.0578978+10:00'
+      WHERE [Id] = 3;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-09-01T18:43:41.0578982+10:00'
+      WHERE [Id] = 4;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+      VALUES (N'20240901084344_addUsersToDb', N'8.0.7');
+Done.
+
+
+
+
+%--------------------------------------------- Section 9: Consuming Secured API ------------------------------------------%
+
+
+
+
+
+%--------------------------------------------- Section 10: Versioning in API ------------------------------------------%
+
+
+## Install NuGet packages for API Versioning
+
+
+>> Asp.Versioning.Mvc
+>> Asp.Versioning.Mvc.ApiExplorer
+
+
+
+%--------------------------------------------- Section 11: Caching, Filter and Pagination ------------------------------------------%
+
+
+
+
+
+%--------------------------------------------- Section 12: .NET Identity ------------------------------------------%
+
+
+
+## Install NuGet packages for API Versioning
+
+
+>> Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+
+(base) PM>  Add-Migration AddIdentityUserTable
+
+(base) PM> Update-Database
+Multiple startup projects set.
+Using project 'DevaLokaVillaAPI' as the startup project.
+Build started...
+Build succeeded.
+The Entity Framework tools version '8.0.7' is older than that of the runtime '8.0.8'. Update the tools for the latest features and bug fixes. See https://aka.ms/AAc1fbw for more information.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (52ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (44ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (37ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [MigrationId], [ProductVersion]
+      FROM [__EFMigrationsHistory]
+      ORDER BY [MigrationId];
+Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20240925084602_AddIdentityUserTable'.
+Applying migration '20240925084602_AddIdentityUserTable'.
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (19ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [AspNetRoles] (
+          [Id] nvarchar(450) NOT NULL,
+          [Name] nvarchar(256) NULL,
+          [NormalizedName] nvarchar(256) NULL,
+          [ConcurrencyStamp] nvarchar(max) NULL,
+          CONSTRAINT [PK_AspNetRoles] PRIMARY KEY ([Id])
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [AspNetUsers] (
+          [Id] nvarchar(450) NOT NULL,
+          [name] nvarchar(max) NULL,
+          [UserName] nvarchar(256) NULL,
+          [NormalizedUserName] nvarchar(256) NULL,
+          [Email] nvarchar(256) NULL,
+          [NormalizedEmail] nvarchar(256) NULL,
+          [EmailConfirmed] bit NOT NULL,
+          [PasswordHash] nvarchar(max) NULL,
+          [SecurityStamp] nvarchar(max) NULL,
+          [ConcurrencyStamp] nvarchar(max) NULL,
+          [PhoneNumber] nvarchar(max) NULL,
+          [PhoneNumberConfirmed] bit NOT NULL,
+          [TwoFactorEnabled] bit NOT NULL,
+          [LockoutEnd] datetimeoffset NULL,
+          [LockoutEnabled] bit NOT NULL,
+          [AccessFailedCount] int NOT NULL,
+          CONSTRAINT [PK_AspNetUsers] PRIMARY KEY ([Id])
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [AspNetRoleClaims] (
+          [Id] int NOT NULL IDENTITY,
+          [RoleId] nvarchar(450) NOT NULL,
+          [ClaimType] nvarchar(max) NULL,
+          [ClaimValue] nvarchar(max) NULL,
+          CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY ([Id]),
+          CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [AspNetUserClaims] (
+          [Id] int NOT NULL IDENTITY,
+          [UserId] nvarchar(450) NOT NULL,
+          [ClaimType] nvarchar(max) NULL,
+          [ClaimValue] nvarchar(max) NULL,
+          CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY ([Id]),
+          CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (16ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [AspNetUserLogins] (
+          [LoginProvider] nvarchar(450) NOT NULL,
+          [ProviderKey] nvarchar(450) NOT NULL,
+          [ProviderDisplayName] nvarchar(max) NULL,
+          [UserId] nvarchar(450) NOT NULL,
+          CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY ([LoginProvider], [ProviderKey]),
+          CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [AspNetUserRoles] (
+          [UserId] nvarchar(450) NOT NULL,
+          [RoleId] nvarchar(450) NOT NULL,
+          CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY ([UserId], [RoleId]),
+          CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE,
+          CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (11ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE [AspNetUserTokens] (
+          [UserId] nvarchar(450) NOT NULL,
+          [LoginProvider] nvarchar(450) NOT NULL,
+          [Name] nvarchar(450) NOT NULL,
+          [Value] nvarchar(max) NULL,
+          CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY ([UserId], [LoginProvider], [Name]),
+          CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+      );
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (38ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-09-25T18:46:00.2853762+10:00'
+      WHERE [Id] = 1;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-09-25T18:46:00.2853790+10:00'
+      WHERE [Id] = 2;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-09-25T18:46:00.2853797+10:00'
+      WHERE [Id] = 3;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE [Villas] SET [CreatedDate] = '2024-09-25T18:46:00.2853802+10:00'
+      WHERE [Id] = 4;
+      SELECT @@ROWCOUNT;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX [IX_AspNetRoleClaims_RoleId] ON [AspNetRoleClaims] ([RoleId]);
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE UNIQUE INDEX [RoleNameIndex] ON [AspNetRoles] ([NormalizedName]) WHERE [NormalizedName] IS NOT NULL;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX [IX_AspNetUserClaims_UserId] ON [AspNetUserClaims] ([UserId]);
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX [IX_AspNetUserLogins_UserId] ON [AspNetUserLogins] ([UserId]);
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX [IX_AspNetUserRoles_RoleId] ON [AspNetUserRoles] ([RoleId]);
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX [EmailIndex] ON [AspNetUsers] ([NormalizedEmail]);
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE UNIQUE INDEX [UserNameIndex] ON [AspNetUsers] ([NormalizedUserName]) WHERE [NormalizedUserName] IS NOT NULL;
+Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (52ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+      VALUES (N'20240925084602_AddIdentityUserTable', N'8.0.8');
+Done.
+(base) PM> 
+
+
+%--------------------------------------------- Section 13: Deployment ------------------------------------------%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

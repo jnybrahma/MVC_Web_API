@@ -1,0 +1,6 @@
+@DevaLokaVillaAPI_HostAddress = http://localhost:5258
+
+GET {{DevaLokaVillaAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
